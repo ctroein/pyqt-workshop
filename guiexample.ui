@@ -153,6 +153,11 @@
          <widget class="QComboBox" name="plotType">
           <item>
            <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Red</string>
            </property>
           </item>
@@ -187,6 +192,16 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="flippyMode">
+          <property name="text">
+           <string>Flippy mode</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

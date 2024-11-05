@@ -23,7 +23,7 @@ from guiexample import Ui_MainWindow
 # from pkg_resources import resource_filename
 # Ui_MainWindow = uic.loadUiType(resource_filename(__name__, "guiexample.ui"))[0]
 
-class PlotCanvas(FigureCanvas):
+class PlotWidget(FigureCanvas):
     "Canvas for drawing matplotlib figure in Qt widget"
     def __init__(self, parent=None):
         self.fig = plt.Figure()
@@ -32,7 +32,7 @@ class PlotCanvas(FigureCanvas):
 
         super().__init__(self.fig)
 
-    def updateImage(self, frame, rgb_index):
+    def drawHistogram(self, frame, rgb_index):
         "Draw a histogram in red, green or blue"
         color = [0., 0., 0.]
         color[rgb_index] = 1.
@@ -43,7 +43,13 @@ class PlotCanvas(FigureCanvas):
         # Don't forget to actually draw the stuff.
         self.draw()
 
+    def clearPlot(self):
+        "Clear and redraw"
+        self.axes.clear()
+        self.draw()
+
     def save(self, filename):
+        "Save the plot to a file (with type deduced from extension)"
         self.fig.savefig(filename)
 
 
@@ -59,15 +65,19 @@ class MyGUI(QtWidgets.QMainWindow, Ui_MainWindow):
             lambda: QtWidgets.QMessageBox.information(
                 self, "About", "This is fun. Lots of fun."))
 
-        # TODO: Connect button clicks to functions
+        # Connect button clicks to functions
         self.startButton.clicked.connect(self.startVideo)
         self.stopButton.clicked.connect(self.stopVideo)
         self.saveButton.clicked.connect(self.saveImage)
 
-        # Add our matplotlib canvas to the empty imagePlot widget
-        self._canvas = PlotCanvas()
-        plotlayout = QtWidgets.QHBoxLayout(self.imagePlot)
-        plotlayout.addWidget(self._canvas)
+        self.plotType.currentIndexChanged.connect(self.histoChanged)
+        self.flippyMode.clicked.connect(self.setFlippyMode)
+        self._flippy = None
+
+        # Add our matplotlib PlotWidget to the empty imagePlot widget
+        self.plotWidget = PlotWidget()
+        layout = QtWidgets.QHBoxLayout(self.imagePlot)
+        layout.addWidget(self.plotWidget)
 
         # The cv2 capture device
         self._cap = None
@@ -89,12 +99,19 @@ class MyGUI(QtWidgets.QMainWindow, Ui_MainWindow):
             print("Image read error; halting video stream")
             self.stopVideo()
             return
+        frame = self.applyFlippyMode(frame)
         # Open opencv HighGUI window and show the image
         cv2.imshow(self.VIDEOTITLE, frame)
         # Pass control to opencv to let it render the window
         cv2.waitKey(1)
-        # Do something with the image in our plot widget
-        self._canvas.updateImage(frame, self.plotType.currentIndex())
+        # Draw the histogram if enabled
+        histo_mode = self.plotType.currentIndex()
+        if histo_mode:
+            self.plotWidget.drawHistogram(frame, histo_mode - 1)
+
+    def histoChanged(self, event):
+        "Histogram type changed; clear the plot"
+        self.plotWidget.clearPlot()
 
     def updateEnabled(self):
         "Enable/disable some GUI elements"
@@ -138,7 +155,44 @@ class MyGUI(QtWidgets.QMainWindow, Ui_MainWindow):
         file, _ = QtWidgets.QFileDialog.getSaveFileName(
             self, "Save histogram", filter="PNG images (*.png)")
         if file:
-            self._canvas.save(file)
+            self.plotWidget.save(file)
+
+    def setFlippyMode(self, checked):
+        if not checked:
+            self._flippy = None
+        else:
+            self._flippy = {
+                "chan": np.random.randint(3),
+                "flip": np.random.randint(5),
+                "inv": np.random.randint(2),
+                "val": np.random.randint(254) + 1,
+                "step" : 8
+                }
+
+    def applyFlippyMode(self, frame):
+        fl = self._flippy
+        if fl is not None:
+            val = fl["val"]
+            if fl["inv"]:
+                lut = np.linspace(0, 255-val, num=256, dtype=np.uint8)
+            else:
+                lut = np.linspace(val, 255, num=256, dtype=np.uint8)
+
+            manip = lut[frame[..., fl["chan"]]]
+            if fl["flip"] == 0:
+                manip = manip[::-1, :]
+            elif fl["flip"] == 1:
+                manip = manip[:, ::-1]
+            elif fl["flip"] == 3:
+                manip = manip[::-1, ::-1]
+            frame[..., fl["chan"]] = manip
+
+            val -= fl["step"]
+            if val > 0:
+                fl["val"] = val
+            else:
+                self.setFlippyMode(True)
+        return frame
 
 if __name__ == '__main__':
     # Get the Qt system / application started

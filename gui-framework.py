@@ -10,6 +10,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import QTimer
 
 import sys
+import numpy as np
 
 import matplotlib
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -22,7 +23,7 @@ from guiexample import Ui_MainWindow
 # from pkg_resources import resource_filename
 # Ui_MainWindow = uic.loadUiType(resource_filename(__name__, "guiexample.ui"))[0]
 
-class PlotCanvas(FigureCanvas):
+class PlotWidget(FigureCanvas):
     "Canvas for drawing matplotlib figure in Qt widget"
     def __init__(self, parent=None):
         self.fig = plt.Figure()
@@ -31,12 +32,21 @@ class PlotCanvas(FigureCanvas):
 
         super().__init__(self.fig)
 
-    def updateImage(self, frame):
-        "Use matplotlib functions to draw some graphics on self.axes"
-        # TODO: Clear axes and draw a histogram or something
-        ...
+    def drawHistogram(self, frame, rgb_index):
+        "Draw a histogram in red, green or blue"
+        color = [0., 0., 0.]
+        color[rgb_index] = 1.
+        self.axes.clear()
+        rgb = frame.reshape((-1, 3))
+        self.axes.hist(rgb[:, rgb_index], bins=np.arange(0, 256),
+                       color=color)
         # Don't forget to actually draw the stuff.
         self.draw()
+
+    def save(self, filename):
+        "Save the plot to a file (with type deduced from extension)"
+        self.fig.savefig(filename)
+
 
 class MyGUI(QtWidgets.QMainWindow, Ui_MainWindow):
     VIDEOTITLE = "Video stream"
@@ -46,10 +56,10 @@ class MyGUI(QtWidgets.QMainWindow, Ui_MainWindow):
         # Build the GUI
         self.setupUi(self)
 
-        # Add our matplotlib canvas to the empty imagePlot widget
-        plotlayout = QtWidgets.QHBoxLayout(self.imagePlot)
-        self._canvas = PlotCanvas()
-        plotlayout.addWidget(self._canvas)
+        # Add our matplotlib PlotWidget to the empty imagePlot widget
+        self.plotWidget = PlotWidget()
+        layout = QtWidgets.QHBoxLayout(self.imagePlot)
+        layout.addWidget(self.plotWidget)
 
         # TODO: Connect button clicks and other input events
         # Example: connect the "clicked" event on self.startButton to
@@ -80,7 +90,7 @@ class MyGUI(QtWidgets.QMainWindow, Ui_MainWindow):
         # Pass control to opencv to let it render the window
         cv2.waitKey(1)
         # Do something with the image in our plot widget
-        self._canvas.updateImage(frame)
+        self.plotWidget.drawHistogram(frame, 0)
 
     def startVideo(self):
         "Start the camera and start running the display timer"
@@ -110,8 +120,8 @@ class MyGUI(QtWidgets.QMainWindow, Ui_MainWindow):
     def saveImage(self):
         "Save the plotted image to a file"
         # TODO: Use QtWidgets.QFileDialog.getSaveFileName to get a file name
-        file = "example.png"
-        self._canvas.save(file)
+        # file = "example.png"
+        # self.plotWidget.save(file)
 
 if __name__ == '__main__':
     # Get the Qt system / application started
