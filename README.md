@@ -1,16 +1,17 @@
 # pyqt-workshop
 GUI programming tutorial for InfraVis days in Lund 2024
 
-You will create a small graphical user interface for starting your webcam and plotting data from the camera.
-We'll use [Qt](https://www.qt.io/) for the GUI, but for simplicity we'll borrow some high-level camera/image functionality from OpenCV.
+You will create a small graphical user interface for starting your webcam
+and plotting data from the camera. We'll use [Qt](https://www.qt.io/) for
+the GUI, but for simplicity we'll borrow some high-level camera/image
+functionality from OpenCV. Python bindings for Qt are available in two
+competing packages, PyQt and PySide2, which are nearly identical (and
+closely based on the Qt C++ API). Here we'll use PyQt5.
 
 1. Install PyQt to use the Qt GUI system from Python, plus OpenCV and matplotlib:
 
     - If using pip: `pip install pyqt5 pyqt5-tools opencv-python matplotlib`
     - If using conda: `conda install pyqt opencv matplotlib`
-
-   Qt was made for C++. Python bindings are available in two competing packages, PyQt and
-   PySide2, which are nearly identical and closely based on the C++ API.
 
 2. Run Qt Designer
 
