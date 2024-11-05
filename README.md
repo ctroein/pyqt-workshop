@@ -9,6 +9,9 @@ We'll use [Qt](https://www.qt.io/) for the GUI, but for simplicity we'll borrow 
     - If using pip: `pip install pyqt5 pyqt5-tools opencv-python matplotlib`
     - If using conda: `conda install pyqt opencv matplotlib`
 
+   Qt was made for C++. Python bindings are available in two competing packages, PyQt and
+   PySide2, which are nearly identical and closely based on the C++ API.
+
 2. Run Qt Designer
 
     - with pip and pyqt5-tools: `pyqt5-tools designer`
@@ -31,7 +34,8 @@ We'll use [Qt](https://www.qt.io/) for the GUI, but for simplicity we'll borrow 
     - `pyuic5 your_gui_file.ui -o your_gui_file.py`
 
 5. Start from `gui-framework.py` and edit to make a working application. Search for "TODO".
-    - Load the UI-generating code, e.g. from your_gui_file.py.
-    - Connect the buttons you have drawn to the corresponding functions for starting/stopping the video capture.
+    - Load the UI-generating code, e.g. from your_gui_file.py
+    - Connect the buttons you have drawn to the corresponding functions for starting/stopping the video capture
     - Enable plotting of the histogram of pixel values, possibly with additional input controls etc.
-    - Add saving of the plotted file.
+    - Add saving of the plotted file, e.g. using
+      [QFileDialog.getSaveFileName](https://doc.qt.io/qtforpython-5/PySide2/QtWidgets/QFileDialog.html#PySide2.QtWidgets.PySide2.QtWidgets.QFileDialog.getSaveFileName)
