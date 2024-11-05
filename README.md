@@ -16,12 +16,15 @@ We'll use [Qt](https://www.qt.io/) for the GUI, but for simplicity we'll borrow 
 
 3. Draw a GUI with:
 
-    - SpinBoxes called cameraNum, videoWidth and videoHeight (with suitable defaults)
-    - PushButtons called startButton and stopButton for starting/stopping video capture
-    - Widget called imagePlot with room for a histogram plot
+    - [QSpinBox](https://doc.qt.io/qtforpython-5/PySide2/QtWidgets/QSpinBox.html)es
+      called cameraNum, videoWidth and videoHeight (with suitable defaults)
+    - [QPushButton](https://doc.qt.io/qtforpython-5/PySide2/QtWidgets/QPushButton.html)s
+      called startButton and stopButton for starting/stopping video capture
+    - QWidget called imagePlot with room for a histogram plot
     - Optionally:
-        - ComboBox or other selector for red/green/blue histogram
-        - PushButton called saveButton for saving the image
+        - [QComboBox](https://doc.qt.io/qtforpython-5/PySide2/QtWidgets/QComboBox.html)
+          or other selector for red/green/blue histogram
+        - QPushButton called saveButton for saving the image
 
 4. Save GUI and generate Python code for it:
 
