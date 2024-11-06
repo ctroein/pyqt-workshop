@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(659, 387)
+        MainWindow.resize(659, 384)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -57,7 +57,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.label_3)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.horizontalLayout.setStretch(7, 1)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -124,7 +123,7 @@ class Ui_MainWindow(object):
         self.label_3.setText(_translate("MainWindow", "px"))
         self.startButton.setText(_translate("MainWindow", "Start video capture"))
         self.stopButton.setText(_translate("MainWindow", "Stop video capture"))
-        self.label_4.setText(_translate("MainWindow", "Image information"))
+        self.label_4.setText(_translate("MainWindow", "Histogram"))
         self.plotType.setItemText(0, _translate("MainWindow", "None"))
         self.plotType.setItemText(1, _translate("MainWindow", "Red"))
         self.plotType.setItemText(2, _translate("MainWindow", "Green"))

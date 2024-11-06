@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>659</width>
-    <height>387</height>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0,1">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0,0">
       <item>
        <widget class="QLabel" name="label_5">
         <property name="text">
@@ -142,7 +142,7 @@
         <item>
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Image information</string>
+           <string>Histogram</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
